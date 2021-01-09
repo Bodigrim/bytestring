@@ -252,7 +252,7 @@ fps_impl_t select_fps_simd_impl() {
 }
 #endif
 
-unsigned long fps_count(unsigned char *str, unsigned long len, unsigned char w) {
+size_t fps_count(unsigned char *str, size_t len, unsigned char w) {
 #ifndef __x86_64__
     return fps_count_naive(str, len, w);
 #else
