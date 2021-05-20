@@ -1801,6 +1801,11 @@ mkBigPS _ pss = return $! concat (P.reverse pss)
 -- Block IO
 
 -- | Outputs a 'ByteString' to the specified 'Handle'.
+--
+-- Beware that prior to OS X 10.9
+-- (<https://opensource.apple.com/source/Libc/Libc-997.1.1/stdio/FreeBSD/fwrite.c.auto.html Libc-997.1.1>)
+-- @fwrite@ system call is buggy and fails for buffers \( \ge 2^{32} \) bytes.
+-- If you target such old platforms, split 'ByteString' into smaller chunks.
 hPut :: Handle -> ByteString -> IO ()
 hPut _ (BS _  0) = return ()
 hPut h (BS ps l) = unsafeWithForeignPtr ps $ \p-> hPutBuf h p l
