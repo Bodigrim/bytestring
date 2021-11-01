@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - bytestring-0.11
+      - multiarch
   pull_request: {}
 
 defaults:
@@ -60,3 +61,45 @@ jobs:
       run: |
         cd bytestring-*/
         cabal haddock
+  multi-arch:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ['armv7', 'aarch64']
+    steps:
+    - uses: actions/checkout@v2
+    - uses: uraimo/run-on-arch-action@v2.1.1
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ubuntu20.04
+        githubToken: ${{ github.token }}
+        install: |
+          apt-get update -y
+          apt-get install -y ghc cabal-install
+          cabal --version
+          cabal update
+        run: |
+          cabal --version
+          cabal new-test
+  multi-arch2:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ['s390x', 'ppc64le']
+    steps:
+    - uses: actions/checkout@v2
+    - uses: uraimo/run-on-arch-action@v2.1.1
+      with:
+        arch: ${{ matrix.arch }}
+        distro: ubuntu20.04
+        githubToken: ${{ github.token }}
+        install: |
+          apt-get update -y
+          apt-get install -y ghc cabal-install
+          cabal --version
+          cabal update
+        run: |
+          cabal --version
+          cabal new-test -j1
