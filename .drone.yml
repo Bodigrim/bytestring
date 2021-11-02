@@ -3,7 +3,7 @@ name: arm
 platform: { os: linux, arch: arm }
 steps:
 - name: Test
-  image: buildpack-deps:impish
+  image: buildpack-deps:hirsute
   commands:
     - export LC_ALL=C.UTF-8
     - apt-get update -y
